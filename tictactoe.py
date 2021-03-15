@@ -47,23 +47,19 @@ def board_is_full(board):
     return True
 
 def minValue(board):
-    print('minValue')
     if terminal(board):
-        print('terminal wiiiiiiiiiiiiiii')
         return utility(board), None
     v = 2
     chose = None
     for action in actions(board):
-        print(action)
-        print(board)
-        value, _ = maxValue(result(board, action))
+        newBoard = result(board, action)
+        value, _ = maxValue(newBoard)
         if value < v:
             chose = action
             v = value
     return v, chose
 
 def maxValue(board):
-    print('maxValue')
     """
     Return a tuple of action and utility
     """
@@ -72,14 +68,11 @@ def maxValue(board):
     v = -2
     chose = None
     for action in actions(board):
-        print(action)
-        print(board)
-        value, _ = minValue(result(board, action))
+        newBoard = result(board, action)
+        value, _ = minValue(newBoard)
         if value > v:
             chose = action
             v = value
-
-    print('fiish')
     return v, chose
 
 '''
@@ -125,7 +118,6 @@ def actions(board):
             if element is EMPTY:
                 actions.append((r, c))
 
-    print(actions)
     return actions
 
 def result(board, action):
@@ -141,7 +133,9 @@ def result(board, action):
     # get the player turn
     turn = player(board)
     #copy the board to avoid to change the original board
-    newBoard = board[:]
+    #board is a list of list so, board.copy() doesn't works
+    #because only works for the first dimension.
+    newBoard = [value[:] for value in board]
     newBoard[action[0]][action[1]] = turn
 
     return newBoard
@@ -184,13 +178,18 @@ def utility(board):
         return -1
     else:
         return 0
-    raise NotImplementedError
 
 
 def minimax(board):
     """
     Returns the optimal action for the current player on the board.
     """
-    _, action = maxValue(board)
+    turn = player(board)
+    # if the ia is X needs to maximize, otherwise
+    # needs to minimize
+    if turn == X:
+        _, action = maxValue(board)
+    else:
+        _, action = minValue(board)
 
     return action

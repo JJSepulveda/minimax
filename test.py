@@ -33,6 +33,12 @@ def test_terminal():
     game_over = ttt.terminal(board)
     assert(game_over == True)
 
+    board = [[X, O, X],
+             [O, X, O],
+             [X, EMPTY, EMPTY]]
+    game_over = ttt.terminal(board)
+    assert(game_over == True)
+
 def test_player():
     board = [[O, X, O],
              [X, O, X],
@@ -141,7 +147,7 @@ def test_result():
              [EMPTY, EMPTY, EMPTY]]
     action = (2, 1)
     newBoard = ttt.result(board, action)
-    print(newBoard)
+    assert(newBoard != board)
 
 def main():
     print('test Terminal function: ')
